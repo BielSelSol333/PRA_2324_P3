@@ -4,11 +4,11 @@ bin/testTableEntry: testTableEntry.cpp TableEntry.h
 
 bin/testHashTable: testHashTable.cpp HashTable.h Dict.h TableEntry.h
 	mkdir -p bin
-	g++ -o bin/HashTable testHashTable.cpp HashTable.h Dict.h TableEntry.h
+	g++ -o bin/testHashTable testHashTable.cpp HashTable.h Dict.h TableEntry.h
 
 bin/testBSTree: testBSTree.cpp BSTree.h BSNode.h
 	mkdir -p bin
-	g++ -o bin/testBSTreeDict testBSTree.cpp BSTree.h BSNode.h
+	g++ -o bin/testBSTree testBSTree.cpp BSTree.h BSNode.h
 
 bin/testBSTreeDict: testBSTreeDict.cpp BSTreeDict.h BSTree.h BSNode.h
 	mkdir -p bin
