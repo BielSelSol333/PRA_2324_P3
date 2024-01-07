@@ -33,31 +33,28 @@ template <typename T> class BSTree{
   }
 
   void print_inorder(std::ostream &out, BSNode<T>* n) const{
-    if(n != nullptr){
-      out << n << " " << std::endl;
-      print_inorder(out, n->right);
+    if(n != nullptr){     
+      out << n->elem << " ";
       print_inorder(out, n->left);
+      print_inorder(out, n->right);
     }
   }
 
    BSNode<T>* remove(BSNode<T>* n, T e){
+     BSNode<T>* aux;
      if(n == nullptr){
        throw std::runtime_error("El árbol está vacio");
-     }else if(e > n->elem){
+     }else if(e > n->elem && n->right != nullptr){
+       aux = n;
        n->right = remove(n->right, e);
-     }else if(e < n->elem){
+     }else if(e < n->elem && n->left != nullptr){
+       aux = n;
        n->left = remove(n->left, e);
      }else{
-       if(n->left != nullptr && n->right != nullptr){
-	 n->elem = max(n->left);
-	 n->left = remove_max(n->left);
-       }else{
-	 if(n->left != nullptr){
-	   return n->left;
-	 }else{
-	   return n->right;
-	 }
-       }
+       /*n->left = aux->left;
+       n->right = aux->right;
+       return aux;
+       delete aux;*/
      }
    }
 
