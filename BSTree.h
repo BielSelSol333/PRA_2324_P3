@@ -1,3 +1,5 @@
+#include <ostream>
+#include <stdexcept>
 #include "BSNode.h"
 
 template <typename T> class BSTree{
@@ -6,45 +8,81 @@ template <typename T> class BSTree{
   BSNode<T> *root;
 
   BSNode<T>* search(BSNode<T>* n, T e) const{
-     if(n->elem = e){
-      return n;
-     }/*else if(n->left == nullptr && n->right == nullptr && n->elem != e){
-       throw std::runtime_eror("El elemento no se encuentra en el arbol");
-     }*/else{
-       search(n->left, e);
+     if(n  == nullptr){
+       throw std::runtime_error("El elemento no se encuentra en el arbol");
+     }else if(e > n->elem && n->right != nullptr){
        search(n->right, e);
-    }
+     }else if(e < n->elem && n->left != nullptr){
+       search(n->left, e);
+     }else{
+       return n;
+     }
   }
 
   BSNode<T>* insert(BSNode<T>* n, T e){
-    //throw std::runtime_eror("El elemento no se encuentra en el arbol");
+    if(n == nullptr){
+      return new BSNode(e);
+    }else if(e == n->elem){
+      throw std::runtime_error("El elemento ya existe en el arbol");
+    }else if(e > n->elem){
+      n->right = insert(n->right, e);
+    }else{
+      n->left = insert(n->left, e);
+    }
+    return n;
   }
 
-  void print_inorder(std::ostream &out, BSNode<T> n) const{
-    out << 
+  void print_inorder(std::ostream &out, BSNode<T>* n) const{
+    if(n != nullptr){
+      out << n << " " << std::endl;
+      print_inorder(out, n->right);
+      print_inorder(out, n->left);
+    }
   }
 
    BSNode<T>* remove(BSNode<T>* n, T e){
-     //throw std::runtime_eror("El elemento no se encuentra en el arbol");
-  }
+     if(n == nullptr){
+       throw std::runtime_error("El árbol está vacio");
+     }else if(e > n->elem){
+       n->right = remove(n->right, e);
+     }else if(e < n->elem){
+       n->left = remove(n->left, e);
+     }else{
+       if(n->left != nullptr && n->right != nullptr){
+	 n->elem = max(n->left);
+	 n->left = remove_max(n->left);
+       }else{
+	 if(n->left != nullptr){
+	   return n->left;
+	 }else{
+	   return n->right;
+	 }
+       }
+     }
+   }
 
    T max(BSNode<T>* n) const{
-     do{
-       n->right;
-     }while(n != nullptr);
-     
-     return n->elem;
+     if(n == nullptr){
+       throw std::runtime_error("No hay elementos en el árbol");
+     }else if(n->right != nullptr){
+       return max(n->right);
+     }else{
+       return n->elem;
+     }
    }
 
    BSNode<T>* remove_max(BSNode<T>* n){
-
+      if(n->right == nullptr){
+       return n->left;
+     }else{
+       n->right = remove_max(n->right);
+       return n;
+     }
    }
 
    void delete_cascade(BSNode<T>* n){
-     if(n == nullptr){
-       delete n;
-     }else{
-       BNode<T> *aux = n;
+     if(n != nullptr){
+       BSNode<T> *aux = n;
        delete_cascade(n->left);
        delete_cascade(n->right);
        delete aux;
@@ -62,8 +100,7 @@ template <typename T> class BSTree{
   }
 
   T search(T e) const{
-    BSNode<T> aux = search(root, e).elem;
-    return aux->elem;
+    return search(root, e)->elem;
   }
 
   T operator[](T e) const{
@@ -71,15 +108,18 @@ template <typename T> class BSTree{
   }
 
   void insert(T e){
-    insert(root, e);
+    root = insert(root, e);
+    nelem++;
   }
 
   friend std::ostream& operator<<(std::ostream &out, const BSTree<T> &bst){
-    return out << bst.print_inorder(out, bst.root) <<std::endl;
+    bst.print_inorder(out, bst.root);
+    return out;
   }
 
   void remove(T e){
-    remove(root, e);
+    root = remove(root, e);
+    nelem--;
   }
 
   ~BSTree(){
