@@ -9,12 +9,15 @@ template <typename V> class HashTable : public Dict<V>{
   int n;
   int max;
   ListLinked<TableEntry<V>> *table;
+  
   int h(std::string key){
-    int i = 0;
-    do{
-      i++;
-    }while(key != table[i].key);
-    return i;
+    int sum_ASCII =  0;
+    
+    for(int i=0; i<key.size(); i++){
+      sum_ASCII += (key[i] - '0');
+    }
+    
+    return (sum_ASCII % max);     
   }
 
   
@@ -36,45 +39,77 @@ template <typename V> class HashTable : public Dict<V>{
   }
   
   friend std::ostream& operator<<(std::ostream &out, const HashTable<V> &th){
-    out << "List => [" << th << "]";
+    out << "Hash table [Entires: " << th.n << ", Capacity: " << th.max << "]\n\n";
+    for(int i=0; i<th.max; i++){
+      out << "=> Bucket " << i << " <=\n\n";
+      out << th.table[i] << "\n\n";
+    }
     return out;
   }
   
   V operator[](std::string key){
-    int i = 0;
-    V val;
-    do{
-      if(table[i].key == key){
-	val = table.data.value;
-      }
-      table = table->next;
-    }while(table != nullptr);
-    return val;
+    return search(key);
   }
   
   void insert(std::string key, V value)override{
-    ListLinked<TableEntry<V>> *aux = table, *prevAux = table;
+    int bucket = h(key);
+    TableEntry<V> new_p(key, value);
+    bool state = false;
     
-    int i = 0;
-    do{
-      if(key == table[i].key){
-	throw std::runtime_error("No existe esa clave");
+    for(int i=0; i<table[bucket].size(); i++){
+      TableEntry<V> aux = table[bucket].get(i);
+      if(new_p == aux){
+	state = true;
       }
-      i++;
-      //aux = aux->next;
-      //prevAux = prevAux->next;
-    }while(table->next != nullptr);
-    prevAux = new ListLinked<TableEntry<V>>((key, value), aux->next);    
+    }
+    
+    if(state == true){
+      throw std::runtime_error("Ya existe esa clave");
+    }else{
+      table[bucket].prepend(new_p);
+      n++;
+    }
   }
   
   V search(std::string key)override{
-   
-    throw std::runtime_error("La clave no existe en la tabla");
+    int bucket = h(key), pos;
+    TableEntry<V> key_s(key);
+    bool state = false;
+    
+    for(int i=0; i<table[bucket].size(); i++){
+      TableEntry<V> aux = table[bucket].get(i);
+      if(aux == key_s){
+	pos = i;
+	state = true;
+      }
+    }
+    
+    if(state == false){
+      throw std::runtime_error("La clave no existe en la tabla");
+    }else{
+      return table[bucket].get(pos).value;
+    }
   }
   
   V remove(std::string key)override{
-    throw std::runtime_error("La clave no existe en la tabla");
+    int bucket = h(key), pos;
+    TableEntry<V> key_s(key);
+    bool state = false;
     
+    for(int i=0; i<table[bucket].size(); i++){
+      TableEntry<V> aux = table[bucket].get(i);
+      if(aux == key_s){
+	pos = i;
+	state = true;
+      }
+    }
+    
+    if(state == false){
+      throw std::runtime_error("La clave no existe en la tabla");
+    }else{
+      n--;
+      return table[bucket].remove(pos).value;
+    }
   }
   
   int entries()override{

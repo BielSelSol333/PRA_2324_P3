@@ -38,7 +38,7 @@ template <typename V>class TableEntry{
   }
   
   friend std::ostream& operator<<(std::ostream &out, const TableEntry<V> &te){
-    out << "('" << te.key << "' => " << te.value << std::endl;
+    out << "  ('" << te.key << "' --> " << te.value << ")";
     return out;
   }
 };
