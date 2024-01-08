@@ -1,5 +1,5 @@
+#include "Dict.h"
 #include "BSTree.h"
-#nclude "Dict.h"
 #include "TableEntry.h"
 
 template <typename V> class BSTreeDict.h{
@@ -16,10 +16,26 @@ template <typename V> class BSTreeDict.h{
   }
 
   friend std::ostream& operator<<(std::ostream &out, const BSTreeDict<V> &bs){
-
+    out << "('" << bs.tree->key << "' => " << bs.tree->value << ") ";x
   }
 
   V operator[](std::string key){
+    
+  }
+
+  void insert(std::string key, V value)override{
+
+  }
+  
+  V search(std::string key)override{
+
+  }
+  
+  V remove(std::string key)override{
+
+  }
+  
+  int entries()override{
 
   }
 };
