@@ -10,9 +10,9 @@ template <typename T> class BSTree{
   BSNode<T>* search(BSNode<T>* n, T e) const{
      if(n  == nullptr){
        throw std::runtime_error("El elemento no se encuentra en el arbol");
-     }else if(e > n->elem && n->right != nullptr){
+     }else if(e > n->elem){
        search(n->right, e);
-     }else if(e < n->elem && n->left != nullptr){
+     }else if(e < n->elem){
        search(n->left, e);
      }else if(n->left == nullptr && n->right == nullptr && n->elem != e){
        throw std::runtime_error("El elemento no se encuentra en el arbol");
