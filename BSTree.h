@@ -14,6 +14,8 @@ template <typename T> class BSTree{
        search(n->right, e);
      }else if(e < n->elem && n->left != nullptr){
        search(n->left, e);
+     }else if(n->left == nullptr && n->right == nullptr && n->elem != e){
+       throw std::runtime_error("El elemento no se encuentra en el arbol");
      }else{
        return n;
      }
@@ -41,17 +43,24 @@ template <typename T> class BSTree{
   }
 
    BSNode<T>* remove(BSNode<T>* n, T e){
-     BSNode<T>* aux = n;
      if(n == nullptr){
        throw std::runtime_error("El árbol está vacio");
-     }else if(e > aux->elem && aux->right != nullptr){
-       aux = n;
-       aux->right = remove(aux->right, e);
-     }else if(e < aux->elem && aux->left != nullptr){
-       aux = n;
-       aux->left = remove(aux->left, e);
+     }else if(e > n->elem){
+       n->right = remove(n->right, e);
+     }else if(e < n->elem){
+       n->left = remove(n->left, e);
      }else{
-       
+       if(n->left != nullptr && n->right != nullptr){
+	 n->elem = max(n->left);
+	 n->left = remove_max(n->left);
+       }else{
+	 n = (n->left != nullptr)? n->left : n->right;
+	 /*if(n->left != nullptr){
+	   n = n->left;
+	 }else{
+	   n = n->right;
+	   }*/
+       }
      }
      return n;
    }
@@ -77,10 +86,9 @@ template <typename T> class BSTree{
 
    void delete_cascade(BSNode<T>* n){
      if(n != nullptr){
-       BSNode<T> *aux = n;
        delete_cascade(n->left);
        delete_cascade(n->right);
-       delete aux;
+       delete n;
      }
    }
    
