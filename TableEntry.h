@@ -18,43 +18,35 @@ template <typename V>class TableEntry{
   TableEntry(){}
 
   friend bool operator<(const TableEntry<V> &te1, const TableEntry<V> &te2){
-    bool state;
-    if(te1.value < te2.value){
-      state = true;
+    if(te1.key < te2.key){
+      return true;
     }else{
-      state = false;
+      return false;
     }
-    return state;
   }
   
   friend bool operator>(const TableEntry<V> &te1, const TableEntry<V> &te2){
-    bool state;
-    if(te1.value > te2.value){
-      state = true;
+    if(te1.key > te2.key){
+      return true;
     }else{
-      state = false;
+      return false;
     }
-    return state;
   }
   
   friend bool operator==(const TableEntry<V> &te1, const TableEntry<V> &te2){
-    bool state;
     if(te1.key == te2.key){
-      state = true;
+      return true;
     }else{
-      state = false;
+      return false;
     }
-    return state;
   }
   
   friend bool operator!=(const TableEntry<V> &te1, const TableEntry<V> &te2){
-    bool state;
     if(te1.key == te2.key){
-      state = false;
+      return false;
     }else{
-      state = true;
+      return true;
     }
-    return state;
   }
   
   friend std::ostream& operator<<(std::ostream &out, const TableEntry<V> &te){
