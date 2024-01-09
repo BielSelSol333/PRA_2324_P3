@@ -23,7 +23,7 @@ template <typename T> class BSTree{
 
   BSNode<T>* insert(BSNode<T>* n, T e){
     if(n == nullptr){
-      return new BSNode(e);
+      return new BSNode<T>(e);
     }else if(e == n->elem){
       throw std::runtime_error("El elemento ya existe en el arbol");
     }else if(e > n->elem){
@@ -42,28 +42,25 @@ template <typename T> class BSTree{
     }    
   }
 
-   BSNode<T>* remove(BSNode<T>* n, T e){
-     if(n == nullptr){
-       throw std::runtime_error("El árbol está vacio");
-     }else if(e > n->elem){
-       n->right = remove(n->right, e);
-     }else if(e < n->elem){
-       n->left = remove(n->left, e);
-     }else{
-       if(n->left != nullptr && n->right != nullptr){
-	 n->elem = max(n->left);
-	 n->left = remove_max(n->left);
-       }else{
-	 n = (n->left != nullptr)? n->left : n->right;
-	 /*if(n->left != nullptr){
-	   n = n->left;
-	 }else{
-	   n = n->right;
-	   }*/
-       }
-     }
-     return n;
-   }
+  BSNode<T>* remove(BSNode<T>* n, T e){
+    if (n == nullptr) {
+      throw std::runtime_error("El árbol está vacío");
+    } else if (e > n->elem) {
+      n->right = remove(n->right, e);
+    } else if (e < n->elem) {
+      n->left = remove(n->left, e);
+    } else {
+      if (n->left != nullptr && n->right != nullptr) {
+	n->elem = max(n->left);
+	n->left = remove_max(n->left);
+      } else {
+	BSNode<T>* aux = n;
+	n = (n->left != nullptr) ? n->left : n->right;
+	delete aux;
+      }
+    }
+    return n;
+  }
 
    T max(BSNode<T>* n) const{
      if(n == nullptr){
@@ -75,15 +72,17 @@ template <typename T> class BSTree{
      }
    }
 
-   BSNode<T>* remove_max(BSNode<T>* n){
-      if(n->right == nullptr){
-       return n->left;
-     }else{
-       n->right = remove_max(n->right);
-       return n;
-     }
-   }
-
+  BSNode<T>* remove_max(BSNode<T>* n){
+    if(n->right == nullptr) {
+      BSNode<T>* auxL = n->left;
+      delete n;
+      return auxL;
+    }else{
+      n->right = remove_max(n->right);
+      return n;
+    }
+  }
+ 
    void delete_cascade(BSNode<T>* n){
      if(n != nullptr){
        delete_cascade(n->left);

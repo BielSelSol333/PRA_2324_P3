@@ -1,4 +1,4 @@
-#include <ostream>
+#include <string>
 
 template <typename V> class Dict{
  public:
