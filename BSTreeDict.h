@@ -19,49 +19,49 @@ template <typename V> class BSTreeDict : public Dict<V>{
 
   friend std::ostream& operator<<(std::ostream &out, const BSTreeDict<V> &bs){
     if(bs.tree != nullptr){
-      out << bs.tree;
+      out << *bs.tree;  
     }
     return out;
   }
 
   V operator[](std::string key){
     TableEntry<V> aux(key);
-
+    
     return tree->search(aux).value;
   }
 
-  void insert(std::string key, V value)override{
+  void insert(std::string key, V value) override{
     TableEntry<V> aux(key, value);
-    if(tree->size() == 0){
-      tree = new BSTree<TableEntry<V>>;
-    }else{
-      tree->insert(aux);
+
+    if(tree == nullptr){
+      tree = new BSTree<TableEntry<V>>();
     }
+    tree->insert(aux);
   }
   
-  V search(std::string key)override{
+  V search(std::string key) override{
     TableEntry<V> aux(key);
     
     if(tree == nullptr){
       throw std::runtime_error("El árbol está vacío");
     }else{
-      tree->search(aux).value;
+      return tree->search(aux).value;
     }
   }
   
-  V remove(std::string key)override{
+  V remove(std::string key) override{
     TableEntry<V> aux(key);
     
-    if(tree == nullptr){
+    if (tree == nullptr) {
       throw std::runtime_error("El árbol está vacío");
-    }else{
+    } else {
       V el = tree->search(aux).value;
       tree->remove(aux);
       return el;
     }
   }
   
-  int entries()override{
+  int entries() override{
     if(tree != nullptr){
       return tree->size();
     }else{
